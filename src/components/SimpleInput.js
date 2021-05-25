@@ -5,7 +5,7 @@ const SimpleInput = (props) => {
   const [enteredNameTouched, setEnteredNameTouched] = useState(false);
 
   /* Component function is re-rendered everytime the state changes */
-  const enteredNameIsValid = enteredName.trim !== '' && enteredNameTouched;
+  const enteredNameIsValid = enteredName.trim() !== '' && enteredNameTouched;
 
   const nameInputChangeHandler = event => {
     setEnteredName(event.target.value);
@@ -22,6 +22,7 @@ const SimpleInput = (props) => {
 
     console.log('* Entered Name: ', enteredName);
     setEnteredName('');
+    setEnteredNameTouched(false);
   };
 
   const nameInputClasses = enteredNameIsValid ? 'form-control' : 'form-control invalid';
@@ -34,7 +35,7 @@ const SimpleInput = (props) => {
         {!enteredNameIsValid && <p className='error-text'>Name must not be empty!</p>}
       </div>
       <div className="form-actions">
-        <button>Submit</button>
+        <button type='submit'>Submit</button>
       </div>
     </form>
   );
