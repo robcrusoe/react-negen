@@ -1,26 +1,50 @@
-import { useState } from 'react';
+import { useReducer } from 'react';
+
+/* Defining a `Reducer Function` ... */
+const inputStateReducer = (state, action) => {
+    if (action.type === 'INPUT') {
+        return { ...state, value: action.value };
+    } else if (action.type === 'BLUR') {
+        return { ...state, isTouched: true };
+    } else if (action.type === 'RESET') {
+        return initialInputState;
+    }
+};
+
+/* Defining an initial state ... */
+const initialInputState = {
+    value: '',
+    isTouched: false
+};
+
+
 
 export const useInput = (validateValue) => {
-    const [value, setValue] = useState('');
-    const [isTouched, setIsTouched] = useState(false);
+    const [inputState, inputDispatchFunction] = useReducer(inputStateReducer, initialInputState);
 
-    const hasError = !validateValue(value, isTouched);
+    const hasError = !validateValue(inputState.value, inputState.isTouched);
 
     const valueInputChangeHandler = (event) => {
-        setValue(event.target.value);
+        inputDispatchFunction({
+            type: 'INPUT',
+            value: event.target.value
+        });
     };
 
     const valueInputFocusHandler = (event) => {
-        setIsTouched(true);
+        inputDispatchFunction({
+            type: 'BLUR'
+        });
     };
 
     const reset = () => {
-        setValue('');
-        setIsTouched(false);
+        inputDispatchFunction({
+            type: 'RESET'
+        });
     };
 
     return {
-        value,
+        value: inputState.value,
         hasError,
         valueInputChangeHandler,
         valueInputFocusHandler,
